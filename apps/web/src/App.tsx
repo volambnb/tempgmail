@@ -85,26 +85,42 @@ export default function App() {
     };
   }, []);
   useEffect(() => {
-    if (!turnstileSiteKey || turnstileWidget.current) return;
-    const id = window.setInterval(() => {
-      if (!turnstileRef.current || turnstileWidget.current || !window.turnstile) return;
+    if (!turnstileSiteKey || turnstilePassed || turnstileWidget.current) return;
+    const renderWidget = () => {
+      if (!turnstileRef.current || turnstileWidget.current || !window.turnstile) return false;
       turnstileWidget.current = window.turnstile.render(turnstileRef.current, {
         sitekey: turnstileSiteKey,
         callback: window.onTurnstileSuccess,
         "expired-callback": window.onTurnstileExpired,
         "error-callback": window.onTurnstileExpired,
       });
-      window.clearInterval(id);
-    }, 200);
+      return true;
+    };
+    if (renderWidget()) return;
+    if (!document.querySelector<HTMLScriptElement>('script[data-turnstile="true"]')) {
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      script.async = true;
+      script.defer = true;
+      script.dataset.turnstile = "true";
+      script.onload = () => { renderWidget(); };
+      document.head.appendChild(script);
+    }
+    const id = window.setInterval(() => {
+      if (renderWidget()) window.clearInterval(id);
+    }, 250);
     return () => window.clearInterval(id);
-  }, [turnstileSiteKey]);
+  }, [turnstileSiteKey, turnstilePassed]);
   useEffect(() => {
     if (!turnstileSiteKey || !turnstileToken || turnstilePassed) return;
     api<{ ok: boolean }>("/api/turnstile/verify", {
       method: "POST",
       body: JSON.stringify({ token: turnstileToken }),
     })
-      .then(() => setTurnstilePassed(true))
+      .then(() => {
+        setTurnstilePassed(true);
+        turnstileWidget.current = "";
+      })
       .catch(() => {
         setTurnstileToken("");
         window.turnstile?.reset(turnstileWidget.current);
