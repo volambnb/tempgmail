@@ -1,0 +1,17 @@
+{
+  "name": "tempgmail",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev -w @tempgmail/web",
+    "dev:api": "npm run dev -w @tempgmail/api",
+    "build": "npm run build -w @tempgmail/shared && npm run build -w @tempgmail/api && npm run build -w @tempgmail/email-worker && npm run build -w @tempgmail/web",
+    "test": "npm run test -w @tempgmail/api",
+    "cloudflare:bootstrap": "powershell -ExecutionPolicy Bypass -File ./scripts/bootstrap-cloudflare.ps1",
+    "do-all": "powershell -ExecutionPolicy Bypass -File ./scripts/do-all.ps1",
+    "cloudflare:from-token": "powershell -ExecutionPolicy Bypass -File ./scripts/run-from-token.ps1"
+  }
+}

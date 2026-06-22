@@ -1,0 +1,24 @@
+﻿# Local only - never commit
+.env
+.env.*
+!.env.example
+.env.cloudflare
+token.txt
+secrets.local.ps1
+gmail-backends.json
+
+# Dependencies and build output
+node_modules/
+dist/
+apps/*/dist/
+.wrangler/
+.turbo/
+.vite/
+
+# Local temp files
+_fix_test.py
+*.log
+
+# TypeScript cache
+*.tsbuildinfo
+apps/api/src/fix_test.py

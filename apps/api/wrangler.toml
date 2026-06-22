@@ -1,0 +1,33 @@
+﻿name = "tempmail-api"
+main = "src/index.ts"
+compatibility_date = "2026-01-01"
+
+[triggers]
+crons = ["0 * * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "tempmail-db"
+database_id = "74571c9f-e370-4e0f-92ed-7e9403e2d231"
+
+[[r2_buckets]]
+binding = "ATTACHMENTS"
+bucket_name = "tempmail-attachments"
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "f16d4b57e7c54a18bf64dfbc6bbcc112"
+
+[[durable_objects.bindings]]
+name = "MAILBOX"
+class_name = "MailboxDO"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["MailboxDO"]
+
+[vars]
+SYSTEM_DOMAIN = "stockai.store"
+DEFAULT_DOMAIN = "stockai.store"
+DEFAULT_TTL_MS = "3600000"
+

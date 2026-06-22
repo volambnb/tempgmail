@@ -1,0 +1,19 @@
+﻿name = "tempmail-email"
+main = "src/index.ts"
+compatibility_date = "2026-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "tempmail-db"
+database_id = "74571c9f-e370-4e0f-92ed-7e9403e2d231"
+
+[[r2_buckets]]
+binding = "ATTACHMENTS"
+bucket_name = "tempmail-attachments"
+
+[[durable_objects.bindings]]
+name = "MAILBOX"
+class_name = "MailboxDO"
+script_name = "tempmail-api"
+
+

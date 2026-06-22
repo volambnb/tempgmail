@@ -1,0 +1,2 @@
+-- No-op compatibility migration.
+-- These columns/indexes were already added by 0002_auth_stripe.sql.
