@@ -10,7 +10,7 @@ import { registerStripeRoutes } from "./stripe";
 const DEFAULT_DOMAIN = "stockai.store";
 const TTL_MS = 3600_000;
 type AppContext = Context<{ Bindings: Env }>;
-const TURNSTILE_SESSION_TTL = 30 * 60;
+const TURNSTILE_SESSION_TTL = 24 * 60 * 60;
 
 function sessionCookie(id: string): string {
   return `tm_session=${encodeURIComponent(id)}; Path=/; HttpOnly; SameSite=None; Secure; Max-Age=2592000`;

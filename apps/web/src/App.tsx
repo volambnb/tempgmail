@@ -144,6 +144,17 @@ export default function App() {
     setTurnstileToken("");
     window.turnstile?.reset(turnstileWidget.current);
   };
+  const showError = (err: unknown, fallback: string) => {
+    const message = err instanceof Error ? err.message : fallback;
+    if (message.includes("captcha")) {
+      setTurnstilePassed(false);
+      setTurnstileToken("");
+      turnstileWidget.current = "";
+      setNotice("");
+      return;
+    }
+    setNotice(message);
+  };
 
   const createDomain = async (domain?: string, local?: string) => {
     if (turnstileSiteKey && !turnstilePassed) {
@@ -160,7 +171,7 @@ export default function App() {
       persist(m);
       rememberDomain(m.address.split("@")[1] ?? "stockai.store");
     } catch (err) {
-      setNotice(err instanceof Error ? err.message : "Cannot create mailbox.");
+      showError(err, "Cannot create mailbox.");
     } finally {
       setBusy(false);
     }
@@ -176,7 +187,7 @@ export default function App() {
       const m = await api<MailboxResp>("/api/gmail-mailbox", { method: "POST", body: JSON.stringify({ turnstileToken }) });
       persist(m);
     } catch (err) {
-      setNotice(err instanceof Error ? err.message : "Cannot create Gmail alias.");
+      showError(err, "Cannot create Gmail alias.");
     } finally {
       setBusy(false);
     }
